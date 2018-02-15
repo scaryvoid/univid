@@ -77,6 +77,11 @@ def checkRange(maxNum, num):
         return 1
 
 
+def refresh(days, hours):
+    getJsonFiles()
+    getEvents(days, hours)
+
+
 def main():
     parser = argparse.ArgumentParser(description='List and view events local backup of unifi-video system.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -96,8 +101,7 @@ def main():
             vidPath = f.read()
 
     os.chdir(vidPath)
-    getJsonFiles()
-    getEvents(args.d, args.t)
+    refresh(args.d, args.t)
 
     # main loop
     while True:
@@ -111,6 +115,7 @@ def main():
         if "q" in selected:
             sys.exit()
         elif "r" in selected:
+            refresh(args.d, args.t)
             continue
         elif "h" in selected:
             input(helpString)
@@ -119,6 +124,7 @@ def main():
             for x in range(0, eventNumber):
                 vidFiles.append(' '.join(events[sorted(events)[x - 1]]))
         elif selected is "":
+            refresh(args.d, args.t)
             continue
         elif not any(char.isdigit() for char in selected):
             input("\nInvalid input\n")
